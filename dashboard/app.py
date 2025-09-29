@@ -9,7 +9,6 @@ def status():
 @app.route('/api/alerts', methods=['POST'])
 def alerts():
     data = request.get_json()
-    # Log or process IDS alert
     return jsonify({"received": data}), 201
 
 if __name__ == '__main__':

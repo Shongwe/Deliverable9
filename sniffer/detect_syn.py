@@ -4,7 +4,7 @@ import time, json, os, signal, sys
 
 OUT = "/app/syn_counts.json"
 counter = Counter()
-window = 10  # seconds to aggregate
+window = 10  
 last_dump = time.time()
 
 def dump_counts():
@@ -20,7 +20,7 @@ def pkt_cb(pkt):
     if pkt.haslayer(TCP) and pkt.haslayer(IP):
         tcp = pkt.getlayer(TCP)
         ip = pkt.getlayer(IP)
-        if tcp.flags & 0x02:  # SYN bit
+        if tcp.flags & 0x02:
             key = (ip.dst, tcp.dport)
             counter[key] += 1
             dump_counts()
@@ -34,5 +34,5 @@ def handle_exit(sig, frame):
 signal.signal(signal.SIGINT, handle_exit)
 signal.signal(signal.SIGTERM, handle_exit)
 
-print("[*] Starting SYN sniffer...")
+print(" Starting SYN sniffer...")
 sniff(prn=pkt_cb, store=False, filter="tcp", timeout=0)

@@ -1,4 +1,3 @@
-# simple temperature sensor generator
 import os, time, random, requests, socket
 from datetime import datetime
 
@@ -44,7 +43,6 @@ if __name__ == "__main__":
     while True:
         loop += 1
         temp = BASE_TEMP + random.gauss(0, TEMP_VARIANCE)
-        # tiny chance of an anomaly spike
         if random.random() < 0.001:
             temp += random.choice([15, -15])
             send_telemetry(temp, extra={"anomaly": "spike"})
