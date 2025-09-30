@@ -1,47 +1,69 @@
-version: "3.8"
+version: '3.8'
 
 services:
+
+  iot1:
+    build: ./iot-device
+    container_name: iot1
+    environment:
+      - DEVICE_NAME=iot1
+    networks:
+      iot-lan:
+        ipv4_address: 192.168.100.10
+    restart: always
+
+  iot2:
+    build: ./iot-device
+    container_name: iot2
+    environment:
+      - DEVICE_NAME=iot2
+    networks:
+      iot-lan:
+        ipv4_address: 192.168.100.11
+    restart: always
+
+  iot3:
+    build: ./iot-device
+    container_name: iot3
+    environment:
+      - DEVICE_NAME=iot3
+    networks:
+      iot-lan:
+        ipv4_address: 192.168.100.12
+    restart: always
+
+  iot-temp:
+    build: ./iot-device
+    container_name: iot-temp
+    environment:
+      - DEVICE_NAME=iot-temp
+    networks:
+      iot-lan:
+        ipv4_address: 192.168.100.13
+    restart: always
+
   iot-server:
     build: ./iot-server
     container_name: iot-server
     ports:
       - "8080:8080"
     networks:
-      - iot-lan
+      iot-lan:
+        ipv4_address: 192.168.100.21
     restart: always
 
   sniffer:
     build: ./sniffer
     container_name: sniffer
     networks:
-      - iot-lan
+      iot-lan:
+        ipv4_address: 192.168.100.30
+    privileged: true
     cap_add:
       - NET_ADMIN
       - NET_RAW
-    privileged: true
     restart: always
-    command: ["python", "-u", "detect_syn.py"]
-    depends_on:
-      - iot-server
-
-  device:
-    build: ./device
-    image: iot_temp_sensor:latest
-    networks:
-      - iot-lan
-    environment:
-      - COLLECTOR_HOST=iot-server
-      - COLLECTOR_PORT=8080
-      - DEVICE_PREFIX=device
-      - INTERVAL=2
-      - BASE_TEMP=22.0
-      - TEMP_VARIANCE=0.5
-      - BURST=false
-    deploy:
-      replicas: 5
-    restart: always
-    depends_on:
-      - iot-server
+    command: python -u detect_syn.py
 
   dashboard:
     build: ./dashboard
@@ -49,27 +71,29 @@ services:
     ports:
       - "5002:5002"
     networks:
-      - iot-lan
+      iot-lan:
+        ipv4_address: 192.168.100.40
     restart: always
-    depends_on:
-      - iot-server
 
   frontend:
     build: ./frontend
     container_name: frontend
     ports:
       - "3000:3000"
-    networks:
-      - iot-lan
     depends_on:
       - dashboard
+    networks:
+      iot-lan:
+        ipv4_address: 192.168.100.50
     restart: always
 
   attacker:
     build: ./attacker
     container_name: attacker
+    command: bash
     networks:
-      - iot-lan
+      iot-lan:
+        ipv4_address: 192.168.100.99
     cap_add:
       - NET_RAW
       - NET_ADMIN
@@ -79,8 +103,11 @@ services:
     stdin_open: true
     tty: true
     restart: "no"
-    command: ["bash", "-lc", "sleep 3600"]
 
 networks:
   iot-lan:
+    name: iot-lan
     driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.100.0/24
