@@ -50,20 +50,11 @@ services:
     networks:
       iot-lan:
         ipv4_address: 192.168.100.21
-    restart: always
-
-  sniffer:
-    build: ./sniffer
-    container_name: sniffer
-    networks:
-      iot-lan:
-        ipv4_address: 192.168.100.30
     privileged: true
     cap_add:
       - NET_ADMIN
       - NET_RAW
     restart: always
-    command: python -u detect_syn.py
 
   dashboard:
     build: ./dashboard

@@ -16,7 +16,8 @@ ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Title, T
 
 function LivePacketChart() {
   const [labels, setLabels] = useState([]);
-  const [dataPoints, setDataPoints] = useState([]);
+  const [benignPoints, setBenignPoints] = useState([]);
+  const [maliciousPoints, setMaliciousPoints] = useState([]);
 
   useEffect(() => {
     const socket = io("http://localhost:5002");
@@ -26,7 +27,14 @@ function LivePacketChart() {
       const packets = data.packet_count || 0;
 
       setLabels(prev => [...prev.slice(-19), timestamp]);
-      setDataPoints(prev => [...prev.slice(-19), packets]);
+
+      if (data.type === "Benign") {
+        setBenignPoints(prev => [...prev.slice(-19), packets]);
+        setMaliciousPoints(prev => [...prev.slice(-19), 0]);
+      } else {
+        setBenignPoints(prev => [...prev.slice(-19), 0]);
+        setMaliciousPoints(prev => [...prev.slice(-19), packets]);
+      }
     });
 
     return () => socket.disconnect();
@@ -36,10 +44,17 @@ function LivePacketChart() {
     labels,
     datasets: [
       {
-        label: 'Sniffed Packets per Flow',
-        data: dataPoints,
+        label: 'Benign Packets',
+        data: benignPoints,
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
+        tension: 0.3,
+      },
+      {
+        label: 'Malicious Packets',
+        data: maliciousPoints,
+        fill: false,
+        borderColor: 'rgb(255, 99, 132)',
         tension: 0.3,
       },
     ],
@@ -49,13 +64,19 @@ function LivePacketChart() {
     responsive: true,
     plugins: {
       legend: { position: 'top' },
-      title: { display: true, text: 'Live Sniffed Packet Count' },
+      title: { display: true, text: 'Live Traffic Classification' },
     },
   };
 
   return (
     <div style={{ maxWidth: '800px', margin: 'auto' }}>
-      <Line data={chartData} options={chartOptions} />
+      {labels.length === 0 ? (
+        <p style={{ textAlign: 'center', fontStyle: 'italic', marginTop: '2rem' }}>
+          Waiting for live traffic...
+        </p>
+      ) : (
+        <Line data={chartData} options={chartOptions} />
+      )}
     </div>
   );
 }
