@@ -1,1 +1,6 @@
 flask==2.3.3
+fastapi
+uvicorn
+scikit-learn
+joblib
+pydantic

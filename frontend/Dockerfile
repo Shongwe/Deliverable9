@@ -1,11 +1,13 @@
-FROM node:18 AS builder
+FROM node:18
+
 WORKDIR /app
+
 COPY package*.json ./
 RUN npm install
-COPY . .
-RUN npm run build
+RUN npm install socket.io-client chart.js react-chartjs-2
 
-FROM nginx:stable-alpine
-COPY --from=builder /app/build /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+COPY . .
+
+EXPOSE 3000
+
+CMD ["npm", "start", "--", "--host", "0.0.0.0"]

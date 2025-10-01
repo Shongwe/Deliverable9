@@ -1,0 +1,18 @@
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f0f8ff;
+}
+
+.dashboard-content {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: #f9fbff;
+}
+
+.alerts-section {
+  margin-top: 2rem;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}

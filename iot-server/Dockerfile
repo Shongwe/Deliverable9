@@ -1,10 +1,12 @@
-FROM python:3.11-slim
-
-RUN apt-get update && apt-get install -y tcpdump tshark && rm -rf /var/lib/apt/lists/*
+FROM python:3.9-slim
 
 WORKDIR /app
-COPY server.py /app/server.py
+
+COPY iot_server.py .
+
+RUN pip install --no-cache-dir flask requests
+
 
 EXPOSE 8080
 
-CMD bash -lc "tcpdump -i any -w /captures/iot_capture.pcap & python server.py"
+CMD ["python", "iot_server.py"]

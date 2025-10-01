@@ -144,6 +144,8 @@ def send_alert(label, key, flow):
     alert = {
         "device": f"flow-{key[0]}",
         "type": label,
+        "source_ip": key[0],
+        "destination_ip": key[1],
         "packet_count": flow['fwd_count'] + flow['bwd_count'],
         "duration": round(flow['last'] - flow['start'], 2),
         "timestamp": time.strftime('%Y-%m-%dT%H:%M:%S', time.localtime(flow['last']))
