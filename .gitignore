@@ -6,6 +6,7 @@ processed/
 # Ignore model binaries and encoders
 *.pkl
 *.joblib
+*.bib
 
 # Ignore plots and images
 *.png
