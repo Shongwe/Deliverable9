@@ -2,6 +2,7 @@
 raw/
 processed/
 *.csv
+*.zip
 
 # Ignore model binaries and encoders
 *.pkl
