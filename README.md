@@ -1,5 +1,11 @@
 # GothamDataset2025: A Reproducible Large-Scale IoT Network Dataset for Intrusion Detection and Security Research
 
+
+## Demo
+[![Watch the demo](https://img.youtube.com/vi/rXk-atv2VBc/0.jpg)](https://youtu.be/rXk-atv2VBc)
+
+---
+
 The dataset simulates a large-scale IoT network using the Gotham testbed, offering a realistic environment for network security research. It includes normal traffic generated with protocols such as MQTT, CoAP, and RTSP, alongside diverse attack scenarios, including port scanning, brute force, and DoS. This enables researchers to study the complexities of security mechanisms tailored to large-scale IoT networks.
 
 The dataset includes several cybersecurity attacks: DoS, Remote Command Execution, Ingress Tool Transfer, Reporting, Telnet Brute Forcing, Network Scanning, Periodic C&C Communication, Remote Code Execution, and CoAP Amplification Attack. It is a multi-class dataset, where each row represents a network packet and contains 23 features along with a label field.
